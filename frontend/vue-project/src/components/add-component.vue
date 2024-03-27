@@ -1,45 +1,40 @@
 <template>
-    <div v-if="showModal" class="modal fade" tabindex="-1" role="dialog">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Modal title</h5>
-            <button type="button" class="btn-close" @click="closeModal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <!-- Your form content here -->
-            <button @click="closeModal" class="btn btn-primary">Close</button>
-          </div>
-        </div>
+  <div >
+    
+  <div class="modal" tabindex="-1" role="dialog" id="sectionModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add {{ name }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="$emit('closeModal')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <slot></slot>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" @click="$emit('confirm-record')">Submit</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="$emit('closeModal')">Close</button>
       </div>
     </div>
-    
-  </template>
-  
-  <script>
-  import { ref } from 'vue';
-  
-  export default {
-    setup() {
-      const showModal = ref(false);
-  
-      const openModal = () => {
-        showModal.value = true;
-      };
-  
-      const closeModal = () => {
-        showModal.value = false;
-      };
-  
-      return {
-        showModal,
-        openModal,
-        closeModal,
-      };
-    },
-  };
-  </script>
-  
-  <style>
-  /* Your dark mode styles here */
-  </style>
+  </div>
+</div>
+ 
+
+  </div>
+</template>
+
+<script setup >
+
+const props = defineProps({
+    name: String
+})
+
+</script>
+
+<style scoped>
+h5 {
+    text-transform: capitalize;
+}
+</style>
