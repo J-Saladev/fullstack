@@ -16,7 +16,7 @@ router.get('/views/:section', function(req, res, next) {
 
 });
 
-router.post('/add/:section', function(req, res, next) {
+router.post('/add/:section', async function(req, res, next) {
   const section = req.params.section
   const data = req.body
   
@@ -27,13 +27,14 @@ router.post('/add/:section', function(req, res, next) {
   
   
   let sql =''
-
-   if (checkExists(section, data)) {
-     sql = `UPDATE ${section} SET ? WHERE id = ${data.id}}`
+  let result = await checkExists(section, data)
+  console.log(result)
+   if (checkExists(section, data) == true) {
+     console.log('Record already exists')
+     sql = `UPDATE ${section} SET ? WHERE id = ${data.id}`
 
    
-  }
-   else {
+  } else {
     delete data.id
    sql = `INSERT INTO ${section} SET ?`
    
@@ -63,20 +64,20 @@ router.delete('/delete/:section', function(req, res, next) {
 })
 
 
-function checkExists(section, data){
+async function checkExists(section, data){
   let sql = `SELECT EXISTS(SELECT id FROM ${section} WHERE id = ?) AS found`
   let id = data.id
+  let result;
   conn.query(sql, id, (err, rows) => {
     if (err) throw err
-
-    if (rows[0].found == 1) {
-      return true
-    }
-    else {
-      return false
-    }
+    console.log('Rows Found vvvv')
+    console.log(rows[0].found)
+    result = rows[0].found == 1 ? true : false
+    console.log(result)
+    return result
     
   })
+  
 }
 
 

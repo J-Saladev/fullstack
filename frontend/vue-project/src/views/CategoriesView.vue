@@ -5,30 +5,24 @@
           <add-component :name="name" @closeModal="closeModal" @confirm-record="confirmRecord">
             <form id="form">
               <div class="mb-3">
-                <label for="name" class="form-label">Full Name</label>
+                <label for="name" class="form-label">Name</label>
                 <input type="text" class="form-control" id="name" name="name" v-bind="form.name" />
               </div>
               <div class="mb-3">
-                <label for="birthday" class="form-label">Birthday</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="birthday"
-                  name="birthday"
-                  v-bind="form.birthday"
-                />
+                <label for="address" class="form-label">Description</label>
+               
+                <textarea
+                  class="form-control" id="description" name="description" v-bind="form.description"></textarea>
+                
               </div>
-              <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="text" class="form-control" id="email" name="email" v-bind="form.email" />
-              </div>
-            
+             
+              
               <input type="text" class="form-control" id="id" name="id" v-bind="form.id" hidden/>
             </form>
           </add-component>
   
           <load-view
-            :section="employees"
+            :section="categories"
             :name="name"
             @delete-record="deleteRecord"
             @edit-record="editRecord"
@@ -45,52 +39,44 @@
   import { ref, onMounted } from 'vue'
   import axios from 'axios'
   
-  const employees = ref([])
-  const name = 'employees'
+  const categories = ref([])
+  const name = 'categories'
   
   
   const form = ref({
     id: '',
     name: '',
-    birthday: '',
-    email: '',
- 
+    description: '',
   })
   
   onMounted(() => {
-    getemployees()
+    getcategories()
   })
   
-  const getemployees = async () => {
+  const getcategories = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/views/employees')
-      employees.value = response.data
-      console.log('got employees')
+      const response = await axios.get('http://localhost:3000/views/categories')
+      categories.value = response.data
+      console.log('got categories')
     } catch (err) {
       console.log(err)
     }
   }
   function confirmRecord() {
-      let emplid= document.getElementById('id').value
-      let emplname= (document.getElementById('name').value)
-      let emplcity= document.getElementById('email').value
-   
-      let emplbirth= document.getElementById('birthday').value
+      let cateid= document.getElementById('id').value
+      let catename= (document.getElementById('name').value)
+      let catedescription = document.getElementById('description').value
   
-    let employee = {
-      id: `${emplid}`,
-      name: `${emplname}`,
-      birthday: `${emplbirth}`,  
-      email: `${emplcity}`,
+    let categorie = {
+      id: `${cateid}`,
+      name: `${catename}`,
+      description: `${catedescription}`
     }
     
-      
-      
-    
-    axios.post('http://localhost:3000/add/employees', employee)
+    axios.post('http://localhost:3000/add/categories', categorie)
     .then(response => {
       console.log(response.data)
-      getemployees()
+      getcategories()
       closeModal()
       
     })
@@ -104,13 +90,10 @@
   let modal = document.getElementById('sectionModal')
       console.log(form.value)
       console.log(record)
-      let emplform = document.getElementById('form')
-      emplform.id.value = record.id
-      emplform.name.value = record.name
-      emplform.birthday.value = record.birthday
-      emplform.email.value = record.email
-    
-      
+      let cateform = document.getElementById('form')
+      cateform.name.value = record.name
+      cateform.description.value = record.description
+      cateform.id.value = record.id
       
   
     modal.style.display = 'block'
@@ -119,10 +102,10 @@
   function deleteRecord(record) {
     if (confirm('Are you sure you want to delete this record?')) {
       
-      axios.delete(`http://localhost:3000/delete/employees`, { data: { id: record.id } })
+      axios.delete(`http://localhost:3000/delete/categories`, { data: { id: record.id } })
       .then(response => {
         console.log(response.data)
-        getemployees()
+        getcategories()
       })
     }
   }

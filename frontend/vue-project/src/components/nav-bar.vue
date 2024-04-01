@@ -30,7 +30,7 @@
         <router-link active-class="active" class="nav-link" to="/shippers">Shippers</router-link>
       </li>
       <li class="nav-item">
-        <router-link active-class="active" class="nav-link" to="/categories">Orders</router-link>
+        <router-link active-class="active" class="nav-link" to="/orders">Orders</router-link>
       </li>
     </ul>
   </div>
